@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
+    public SceneController sceneController;
+    
     private Camera cam;
     [SerializeField] private float moveSpeed = 5f;
     private float movementMultiplier = 10f;
@@ -14,6 +17,10 @@ public class Movement : MonoBehaviour
     private Rigidbody rb;
     private float drag = 5.5f;
     private Vector3 moveDirection;
+
+    private bool canDie = false;
+
+    //public GameObject beam;
     
     [SerializeField] private float fov = 60;
     private float runFOV = 10;
@@ -25,11 +32,24 @@ public class Movement : MonoBehaviour
     private void Start() {
         rb.freezeRotation = true;
         cam.fieldOfView = fov;
+        canDie = false;
+
     }
     private void FixedUpdate()
     {
         Drag();
         Move(new Vector2(0,1), false);
+        SpawnObjects();
+        if (rb.velocity.magnitude > 0.2)
+        {
+            canDie = true;
+        }
+        if (rb.velocity.magnitude <= 0.1 && canDie)
+        {
+            print("Game over");
+            sceneController.GameOver();
+            //sceneController.gameOver = true;
+        }
     }
     void Drag()
     {
@@ -53,6 +73,12 @@ public class Movement : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, 0.1f);
         }
         
+        
+    }
+
+    public void SpawnObjects()
+    {
+        //print(rb.velocity.magnitude);
         
     }
 }
