@@ -28,4 +28,9 @@ public class SceneManager : MonoBehaviour
         print("The game is restarted");
         gameOverMenu.SetActive(false);
     }
+
+    public void LoadScene(int sceneIndex)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneIndex);
+    }
 }
